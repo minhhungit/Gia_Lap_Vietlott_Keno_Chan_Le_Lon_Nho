@@ -27,16 +27,16 @@ namespace Keno
             var host = Host.CreateDefaultBuilder()
                 .ConfigureServices((context, services) =>
                 {
-                    services.AddTransient<IKenoLonNhoChanLeService, KenoLonNhoChanLeService>();
+                    services.AddTransient<IKenoBigSmallEvenOddService, KenoBigSmallEvenOddService>();
                 })
                 .UseSerilog()
                 .Build();
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Log.Logger.Warning("##############################");
 
-                var svc = ActivatorUtilities.CreateInstance<KenoLonNhoChanLeService>(host.Services);
+                var svc = ActivatorUtilities.CreateInstance<KenoBigSmallEvenOddService>(host.Services);
                 svc.RunGame();
             }
         }
