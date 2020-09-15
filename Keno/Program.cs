@@ -32,7 +32,7 @@ namespace Keno
                 .UseSerilog()
                 .Build();
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 Log.Logger.Warning("##############################");
 

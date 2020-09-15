@@ -22,15 +22,19 @@ namespace Keno
             _config = config;
         }
 
+
         public void RunGame()
         {
+            double win_times = 0;
+            double lose_times = 0;
+
             long tien_von = 1000000;
             _log.LogWarning($"Tien khoi dau: {tien_von:C0}");
 
-            var so_lan_trung = 0;
-            var luot_choi = 0;
+            var so_lan_trung_local = 0;
 
             long tien_cao_nhat = 0;
+            long luot_choi = 0;
 
             while (true)
             {
@@ -39,12 +43,12 @@ namespace Keno
                 var maskChanLe = new List<KeyValuePair<ChanLe, long>>();
                 maskChanLe.Add(new KeyValuePair<ChanLe, long>(ChanLe.Chan, 10000));
                 maskChanLe.Add(new KeyValuePair<ChanLe, long>(ChanLe.Chan, 10000));
-                maskChanLe.Add(new KeyValuePair<ChanLe, long>(ChanLe.Chan, 10000));
+                maskChanLe.Add(new KeyValuePair<ChanLe, long>(ChanLe.Le, 10000));
 
                 var maskLonNho = new List<KeyValuePair<LonNho, long>>();
                 maskLonNho.Add(new KeyValuePair<LonNho, long>(LonNho.Lon, 10000));
                 maskLonNho.Add(new KeyValuePair<LonNho, long>(LonNho.Lon, 10000));
-                maskLonNho.Add(new KeyValuePair<LonNho, long>(LonNho.Lon, 10000));
+                maskLonNho.Add(new KeyValuePair<LonNho, long>(LonNho.Nho, 10000));
 
                 var tien_phi = maskChanLe.Sum(x => x.Value) + maskLonNho.Sum(x => x.Value);
                 _log.LogDebug($"Tien phi: {tien_phi:C0}");
@@ -61,8 +65,20 @@ namespace Keno
 
                 if (tien_trung_thuong > 0)
                 {
-                    so_lan_trung++;
+                    so_lan_trung_local++;
                 }
+
+                if (tien_trung_thuong != tien_phi)
+                {
+                    if (tien_trung_thuong > tien_phi)
+                    {
+                        win_times++;
+                    }
+                    else
+                    {
+                        lose_times++;
+                    }
+                }                
 
                 tien_von += tien_trung_thuong;
                 _log.LogDebug("Tien hien tai " + tien_von.ToString("C0"));
@@ -75,9 +91,10 @@ namespace Keno
                 _log.LogDebug("---------------");
             }
 
-            _log.LogWarning($"Tien le con lai: {tien_von:C0}");
-            _log.LogWarning($"So lan trung: {so_lan_trung}");
-            _log.LogWarning($"Tien thang nhieu nhat: {tien_cao_nhat:C0}");
+            //_log.LogWarning($"Tien le con lai: {tien_von:C0}");
+            //_log.LogWarning($"So lan trung: {so_lan_trung_local}");
+            //_log.LogWarning($"Tien thang nhieu nhat: {tien_cao_nhat:C0}");
+            _log.LogWarning($"Win rate {Math.Round(win_times * 100 / lose_times, 2)}%");
         }
 
         private long GameTurn(List<KeyValuePair<ChanLe, long>> maskChanLe, List<KeyValuePair<LonNho, long>> maskLonNho)
